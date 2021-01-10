@@ -7,7 +7,7 @@ class _Vaccines:
 
     def insert(self, vaccine):
         self._conn.execute("""
-               INSERT INTO vaccines (id, data, supplier, quantity) VALUES (?, ?, ?, ?)
+               INSERT INTO vaccines (id, date, supplier, quantity) VALUES (?, ?, ?, ?)
            """, [vaccine.id, vaccine.data, vaccine.supplier, vaccine.quantity])
 
     def find(self, vaccine_id):

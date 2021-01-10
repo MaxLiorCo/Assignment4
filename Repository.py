@@ -46,7 +46,7 @@ class _Repository:
         self._conn.executescript("""
         CREATE TABLE vaccines (
             id          INT         PRIMARY KEY,
-            data        DATE        NOT NULL,
+            date        DATE        NOT NULL,
             supplier    INT,
             quantity    INT         NOT NULL,
             
@@ -78,13 +78,18 @@ class _Repository:
         );
     """)
 
-def registerFile(filePath):
-    file_reader = open(filePath, 'r')
-    firstLine = file_reader.readline()
-    # read first line to know the lengths of the insertions for each table
-    tableInsertionsLength = [int(num) for num in firstLine.split(',')]
-    Lines = file_reader.readlines();
-    for i in range(len(tableInsertionsLength)) #number of tables
+    def registerFile(filePath):
+        file_reader = open(filePath, 'r')
+        firstLine = file_reader.readline()
+        # read first line to know the lengths of the insertions for each table
+        tableInsertionsLength = [int(num) for num in firstLine.split(',')]
+        #Lines = file_reader.readlines();
+        for i in range(tableInsertionsLength[0]):
+            line = file_reader.readline().split(',')
+            self.vaccines.insert(int(line[0]),)
+
+
+
 
 
 

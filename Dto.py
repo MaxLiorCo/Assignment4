@@ -29,5 +29,3 @@ class Logistics:
         self.count_received = count_received
 
 
-def hello:
-    print("f")
