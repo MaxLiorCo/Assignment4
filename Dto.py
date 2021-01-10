@@ -27,3 +27,7 @@ class Logistics:
         self.name = name
         self.count_sent = count_sent
         self.count_received = count_received
+
+
+def hello:
+    print("f")
