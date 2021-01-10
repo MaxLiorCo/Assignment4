@@ -1,4 +1,5 @@
 import sqlite3
+import atexit
 
 # For Join query
 from Dao import _Vaccines
@@ -24,7 +25,7 @@ class _Repository:
         self.clinics = _Clinics(self._conn)
         self.logistics = _Logistics(self._conn)
 
-    #take care of it
+    # take care of it
     def _close(self):
         self._conn.commit()
         self._conn.close()
@@ -42,24 +43,43 @@ class _Repository:
 
     def create_tables(self):
         self._conn.executescript("""
-        CREATE TABLE students (
-            id      INT         PRIMARY KEY,
-            name    TEXT        NOT NULL
+        CREATE TABLE vaccines (
+            id          INT         PRIMARY KEY,
+            data        DATE        NOT NULL,
+            supplier    INT,
+            quantity    INT         NOT NULL,
+            
+            FOREIGN KEY(supplier)   REFERENCES supplier(id)
         );
 
-        CREATE TABLE assignments (
-            num                 INT     PRIMARY KEY,
-            expected_output     TEXT    NOT NULL
+        CREATE TABLE suppliers (
+            id             INT       PRIMARY KEY,
+            name           STRING    NOT NULL,
+            logistic       INT,
+            
+            FOREIGN KEY(logistic)    REFERENCES logistic(id)
         );
 
-        CREATE TABLE grades (
-            student_id      INT     NOT NULL,
-            assignment_num  INT     NOT NULL,
-            grade           INT     NOT NULL,
+        CREATE TABLE clinics (
+            id          INT         PRIMARY KEY,
+            location    STRING      NOT NULL,
+            demand      INT         NOT NULL,
+            logistic    INT,
 
-            FOREIGN KEY(student_id)     REFERENCES students(id),
-            FOREIGN KEY(assignment_num) REFERENCES assignments(num),
-
-            PRIMARY KEY (student_id, assignment_num)
+            FOREIGN KEY(logistic)     REFERENCES logistics(id),
+        );
+        
+        CREATE TABLE logistics (
+        id              INT         PRIMARY KEY,
+        name            STRING      NOT NULL,
+        count_sent      INT         NOT NULL,
+        count_received  INT         NOT NULL,
         );
     """)
+
+
+# ------------------------------------------------------------------------------------------------------------
+
+# Create repository singleton
+repo = _Repository()
+atexit.register(repo._close())
