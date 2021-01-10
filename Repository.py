@@ -2,6 +2,8 @@ import sqlite3
 import atexit
 
 # For Join query
+from datetime import datetime
+
 from Dao import _Vaccines
 from Dao import _Suppliers
 from Dao import _Clinics
@@ -86,7 +88,7 @@ class _Repository:
         #Lines = file_reader.readlines();
         for i in range(tableInsertionsLength[0]):
             line = file_reader.readline().split(',')
-            self.vaccines.insert(int(line[0]),)
+            vaccines.insert(int(line[0]),datetime.strptime)
 
 
 
