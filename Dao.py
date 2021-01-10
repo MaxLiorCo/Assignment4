@@ -1,50 +1,70 @@
-class _Students:
+from Dto import *
+
+
+class _Vaccines:
     def __init__(self, conn):
         self._conn = conn
 
-    def insert(self, student):
+    def insert(self, vaccine):
         self._conn.execute("""
-               INSERT INTO students (id, name) VALUES (?, ?)
-           """, [student.id, student.name])
+               INSERT INTO vaccines (id, data, supplier, quantity) VALUES (?, ?, ?, ?)
+           """, [vaccine.id, vaccine.data, vaccine.supplier, vaccine.quantity])
 
-    def find(self, student_id):
+    def find(self, vaccine_id):
         c = self._conn.cursor()
         c.execute("""
-            SELECT id, name FROM students WHERE id = ?
-        """, [student_id])
-        return Student(*c.fetchone())
+            SELECT * FROM vaccines WHERE id = ?
+        """, [vaccine_id])
+        return Vaccines(*c.fetchone())
 
-class _Assignments:
+
+class _Suppliers:
     def __init__(self, conn):
         self._conn = conn
 
-    def insert(self, assignment):
+    def insert(self, supplier):
         self._conn.execute("""
-                INSERT INTO assignments (num, expected_output) VALUES (?, ?)
-        """, [assignment.num, assignment.expected_output])
+                INSERT INTO suppliers (id, name, logistic) VALUES (?, ?)
+        """, [supplier.id, supplier.name, supplier.logistic])
 
-    def find(self, num):
+    def find(self, id):
         c = self._conn.cursor()
         c.execute("""
-                SELECT num,expected_output FROM assignments WHERE num = ?
-            """, [num])
+                SELECT * FROM suppliers WHERE id = ?
+            """, [id])
+        return Suppliers(*c.fetchone())
 
-        return Assignment(*c.fetchone())
 
-class _Grades:
+class _Clinics:
     def __init__(self, conn):
         self._conn = conn
 
-    def insert(self, grade):
+    def insert(self, clinic):
         self._conn.execute("""
-            INSERT INTO grades (student_id, assignment_num, grade) VALUES (?, ?, ?)
-        """, [grade.student_id, grade.assignment_num, grade.grade])
+            INSERT INTO clinics (clinic_id, clinic_location, clinic_demand, clinitic_logistic) VALUES (?, ?, ?)
+        """, [clinic.id, clinic.location, clinic.demand, clinic.logistic])
 
     def find_all(self):
         c = self._conn.cursor()
         all = c.execute("""
-            SELECT student_id, assignment_num, grade FROM grades
+            SELECT * FROM clinics
         """).fetchall()
+        return [Clinics(*row) for row in all]
 
-        return [Grade(*row) for row in all]
 
+class _Logistics:
+
+    def __init__(self, conn):
+        self._conn = conn
+
+    def insert(self, logistic):
+        self._conn.execute("""
+               INSERT INTO logistics (id, name, count_sent, count_received) VALUES (?, ?, ?, ?)
+           """, [logistic.id, logistic.name, logistic.count_sent, logistic.count_received])
+
+    def find(self, logistic_id):
+        c = self._conn.cursor()
+        c.execute("""
+            SELECT * FROM logistics WHERE id = ?
+        """, [logistic_id])
+        return Logistics(*c.fetchone())
