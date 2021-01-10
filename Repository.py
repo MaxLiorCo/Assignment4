@@ -1,10 +1,13 @@
 import sqlite3
-from Dao import _Students
-from Dao import _Students
-from Dao import _Students
-from Dao import _Students
 
 # For Join query
+from Dao import _Vaccines
+from Dao import _Suppliers
+from Dao import _Clinics
+from Dao import _Logistics
+
+
+# TODO: remove this shit
 class StudentGradeWithName:
     def __init__(self, name, assignment_num, grade):
         self.name = name
@@ -15,17 +18,18 @@ class StudentGradeWithName:
 # The Repository
 class _Repository:
     def __init__(self):
-        self._conn = sqlite3.connect('grades.db')
+        self._conn = sqlite3.connect('./database.db')
         self.vaccines = _Vaccines(self._conn)
         self.suppliers = _Suppliers(self._conn)
         self.clinics = _Clinics(self._conn)
         self.logistics = _Logistics(self._conn)
 
+    #take care of it
     def _close(self):
         self._conn.commit()
         self._conn.close()
 
-#remove this shit
+    # TODO remove this shit
     def get_grades_with_names(self):
         c = self._conn.cursor()
         all = c.execute("""

@@ -9,9 +9,13 @@ conn = None
 
 try:
     conn = sqlite3.connect("./database.db")
-    repo = _Repository()
-    repo.create_tables()
-    print()
+    #repo = _Repository()
+    #repo.create_tables()
+    curser = conn.cursor();
+    curser.execute("""
+    SELECT * FROM logistics
+    """)
+    print(curser.fetchall())
 except Error as e:
     print(e)
 finally:
