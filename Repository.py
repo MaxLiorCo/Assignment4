@@ -5,6 +5,7 @@ import atexit
 from Dao import _Vaccines
 from Dao import _Suppliers
 from Dao import _Clinics
+
 from Dao import _Logistics
 
 
@@ -49,7 +50,7 @@ class _Repository:
             supplier    INT,
             quantity    INT         NOT NULL,
             
-            FOREIGN KEY(supplier)   REFERENCES supplier(id)
+            FOREIGN KEY(supplier)   REFERENCES suppliers(id)
         );
 
         CREATE TABLE suppliers (
@@ -57,7 +58,7 @@ class _Repository:
             name           STRING    NOT NULL,
             logistic       INT,
             
-            FOREIGN KEY(logistic)    REFERENCES logistic(id)
+            FOREIGN KEY(logistic)    REFERENCES logistics(id)
         );
 
         CREATE TABLE clinics (
@@ -66,16 +67,27 @@ class _Repository:
             demand      INT         NOT NULL,
             logistic    INT,
 
-            FOREIGN KEY(logistic)     REFERENCES logistics(id),
+            FOREIGN KEY(logistic)     REFERENCES logistics(id)
         );
         
         CREATE TABLE logistics (
         id              INT         PRIMARY KEY,
         name            STRING      NOT NULL,
         count_sent      INT         NOT NULL,
-        count_received  INT         NOT NULL,
+        count_received  INT         NOT NULL
         );
     """)
+
+def registerFile(filePath):
+    file_reader = open(filePath, 'r')
+    firstLine = file_reader.readline()
+    # read first line to know the lengths of the insertions for each table
+    tableInsertionsLength = [int(num) for num in firstLine.split(',')]
+    Lines = file_reader.readlines();
+    for i in range(len(tableInsertionsLength)) #number of tables
+
+
+
 
 
 # ------------------------------------------------------------------------------------------------------------
