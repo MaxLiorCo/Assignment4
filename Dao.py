@@ -41,7 +41,7 @@ class _Clinics:
 
     def insert(self, clinic):
         self._conn.execute("""
-            INSERT INTO clinics (clinic_id, clinic_location, clinic_demand, clinitic_logistic) VALUES (?, ?, ?)
+            INSERT INTO clinics (id, location, demand, logistic) VALUES (?, ?, ?)
         """, [clinic.id, clinic.location, clinic.demand, clinic.logistic])
 
     def find_all(self):
