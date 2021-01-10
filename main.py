@@ -1,15 +1,16 @@
-import sqlite3
-import os
-import sys
-from Repository import _Repository
-from sqlite3 import Error
+# This is a sample Python script.
 
-args = sys.argv
-conn = None
+# Press Shift+F10 to execute it or replace it with your code.
+# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-conn = sqlite3.connect("./database.db")
-repo = _Repository()
-repo.create_tables()
-repo.registerFile(sys.argv[0])
-repo.executeOrders(sys.argv[1])
-# inside executeOrders we create output file
+
+def print_hi(nameeeeee):
+    # Use a breakpoint in the code line below to debug your script.
+    print(f'Hi, {nameeeeee}')  # Press Ctrl+F8 to toggle the breakpoint.
+
+
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    print_hi('PyCharm')
+
+# See PyCharm help at https://www.jetbrains.com/help/pycharm/
