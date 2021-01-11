@@ -23,6 +23,10 @@ class _Repository:
         if os.path.exists("output.txt"):
             os.remove("output.txt")
 
+    def _close(self):
+        self._conn.commit()
+        self._conn.close()
+
     def create_tables(self):
         self._conn.executescript("""
         CREATE TABLE vaccines (
@@ -84,21 +88,6 @@ class _Repository:
                 line = file_reader.readline().split(',')
                 self.logistics.insert(Logistic(int(line[0]), line[1], int(line[2]), int(line[3])))
 
-            # TODO remove this before submission
-            curser = self._conn.cursor()
-            print(curser.execute(""" 
-                SELECT * FROM vaccines
-            """).fetchall())
-            print(curser.execute(""" 
-                SELECT * FROM suppliers
-            """).fetchall())
-            print(curser.execute(""" 
-                SELECT * FROM clinics
-            """).fetchall())
-            print(curser.execute(""" 
-                SELECT * FROM logistics
-            """).fetchall())
-
     def add_summary_line(self):
         with open('./output.txt', 'a') as the_file:
             the_file.write(str(self.vaccines.total_inventory) + "," +
@@ -135,3 +124,6 @@ class _Repository:
 
         logistic_id_to_update = self.clinics.get_logistics_by_location(location)
         self.logistics.update_sent(logistic_id_to_update, amount)  # update the logistics that sent the vaccines
+
+repo = _Repository()
+atexit.register(repo._close)

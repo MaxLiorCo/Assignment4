@@ -138,5 +138,5 @@ class _Logistics:
                     SELECT count_sent FROM logistics WHERE id = ?""", [logistic_id])
         current_amount = c.fetchone()[0]
         self._conn.execute("""
-            UPDATE logistics SET count_received = ? WHERE id = ?""", [amount_to_add + current_amount, logistic_id])
+            UPDATE logistics SET count_sent = ? WHERE id = ?""", [amount_to_add + current_amount, logistic_id])
         self.total_sent += amount_to_add
