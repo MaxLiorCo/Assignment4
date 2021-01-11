@@ -144,23 +144,15 @@ class _Repository:
         id = _Vaccines.order_count
         date_to_insert = datetime.strptime(date, "%Y-%m-%d").date()
         supplier_id = _Suppliers.find_by_name(name).id # supplier id
-        vaccine = Vaccine(id,date_to_insert,supplier_id,amount)
+        vaccine = Vaccine(id, date_to_insert, supplier_id, amount)
         _Vaccines.insert(vaccine)
 
-        current_amount_received = _Logistics.find(supplier_id).count_received
-        _Logistics.update_received(supplier_id, amount + current_amount_received)
+        _Logistics.update_received(supplier_id, amount)
 
     def send_shipment(self, location, amount):
-        _Vaccines.take_from_inventory(amount)
+        _Vaccines.take_from_inventory(amount) # take the amount needed from the inventory
 
-        _Clinics.updateDemand(location, amount) # update the demand in the clinic which is in the location
+        _Clinics.update_demand(location, amount) # update the demand in the clinic which is in the location
 
         logistic_id_to_update = _Clinics.get_logistics_by_location(location)
-        _Logistics.update_received(logistic_id_to_update, amount)
-
-
-
-
-# Create repository singleton
-# repo = _Repository()
-# atexit.register(repo._close())
+        _Logistics.update_sent(logistic_id_to_update, amount) # update the logistics that sent the vaccines
