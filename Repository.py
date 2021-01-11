@@ -120,7 +120,7 @@ class _Repository:
             the_file.write(str(self.vaccines.total_inventory) + "," +
                            str(self.clinics.total_demand) + "," +
                            str(self.logistics.total_received) + "," +
-                           str(self.logistics.total_sent))
+                           str(self.logistics.total_sent) + "\n")
 
     # ------------------------------------------------------------------------------------------------------------
     # Executing orders
@@ -139,16 +139,16 @@ class _Repository:
     def receive_shipment(self, name, amount, date):
         id = self.vaccines.order_count
         date_to_insert = datetime.strptime(date, "%Y-%m-%d").date()
-        supplier_id = self.suppliers.find_by_name(name).id  # supplier id
-        vaccine = Vaccine(id, date_to_insert, supplier_id, amount)
+        supplier = self.suppliers.find_by_name(name)
+        vaccine = Vaccine(id, date_to_insert, supplier.id, amount)
         self.vaccines.insert(vaccine)
 
-        self.logistics.update_received(supplier_id, amount)
+        self.logistics.update_received(supplier.logistic, amount)
 
     def send_shipment(self, location, amount):
         self.vaccines.take_from_inventory(amount)  # take the amount needed from the inventory
 
         self.clinics.update_demand(location, amount)  # update the demand in the clinic which is in the location
 
-        logistic_id_to_update = _Clinics.get_logistics_by_location(location)
+        logistic_id_to_update = self.clinics.get_logistics_by_location(location)
         self.logistics.update_sent(logistic_id_to_update, amount)   # update the logistics that sent the vaccines
