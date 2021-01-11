@@ -1,19 +1,26 @@
+import atexit
 import sqlite3
-import os
 import sys
 from Repository import _Repository
 from sqlite3 import Error
-
-args = sys.argv
-conn = None
 
 conn = sqlite3.connect("./database.db")
 repo = _Repository()
 try:
     repo.create_tables()
 except Error as e:
-    print("table already exists")
-repo.registerFile(sys.argv[1])
-repo.executeOrders(sys.argv[2])
+    print()
+repo.register_file(sys.argv[1])
+repo.execute_orders(sys.argv[2])
+
+
 # inside executeOrders we create output file
 
+# take care of it
+def close(self):
+    self._conn.commit()
+    self._conn.close()
+
+
+# register to close when program finishes
+atexit.register(close())

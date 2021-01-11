@@ -28,11 +28,6 @@ class _Repository:
         self.clinics = _Clinics(self._conn)
         self.logistics = _Logistics(self._conn)
 
-    # take care of it
-    def _close(self):
-        self._conn.commit()
-        self._conn.close()
-
     # TODO remove this shit
     def get_grades_with_names(self):
         c = self._conn.cursor()
@@ -80,22 +75,26 @@ class _Repository:
         );
     """)
 
-    def registerFile(self, filePath):
+    def register_file(self, filePath):
         with open(filePath, 'r') as file_reader:
             firstLine = file_reader.readline()
             # read first line to know the lengths of the insertions for each table
             tableInsertionsLength = [int(num) for num in firstLine.split(',')]
             # NOTICE: last cell in each line is "*\n" but python ignores \n when converting to int
+            # insert from file to vaccines table
             for i in range(tableInsertionsLength[0]):
                 line = file_reader.readline().split(',')
                 self.vaccines.insert(
                     Vaccine(int(line[0]), datetime.strptime(line[1], "%Y-%m-%d").date(), int(line[2]), int(line[3])))
+            # insert from file to suppliers table
             for i in range(tableInsertionsLength[1]):
                 line = file_reader.readline().split(',')
                 self.suppliers.insert(Supplier(int(line[0]), line[1], int(line[2])))
+            # insert from file to clinics table
             for i in range(tableInsertionsLength[2]):
                 line = file_reader.readline().split(',')
                 self.clinics.insert(Clinic(int(line[0]), line[1], int(line[2]), int(line[3])))
+            # insert from file to logistics table
             for i in range(tableInsertionsLength[3]):
                 line = file_reader.readline().split(',')
                 self.logistics.insert(Logistic(int(line[0]), line[1], int(line[2]), int(line[3])))
@@ -115,7 +114,3 @@ class _Repository:
             """).fetchall())
 
 # ------------------------------------------------------------------------------------------------------------
-
-# Create repository singleton
-# repo = _Repository()
-# atexit.register(repo._close())
