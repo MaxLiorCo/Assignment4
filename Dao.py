@@ -78,3 +78,7 @@ class _Logistics:
             SELECT * FROM logistics WHERE id = ?
         """, [logistic_id])
         return Logistic(*c.fetchone())
+
+    def update_received(self, supplier_id, new_amount):
+        self._conn.execute("""
+                UPDATE logistics SET received_amount = ? WHERE id = ?""", [new_amount, supplier_id])

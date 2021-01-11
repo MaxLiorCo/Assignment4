@@ -68,10 +68,10 @@ class _Repository:
         );
         
         CREATE TABLE logistics (
-        id              INT         PRIMARY KEY,
-        name            STRING      NOT NULL,
-        count_sent      INT         NOT NULL,
-        count_received  INT         NOT NULL
+            id              INT         PRIMARY KEY,
+            name            STRING      NOT NULL,
+            count_sent      INT         NOT NULL,
+            count_received  INT         NOT NULL
         );
     """)
 
@@ -113,19 +113,30 @@ class _Repository:
     def add_summary_line(self, ):
     # ------------------------------------------------------------------------------------------------------------
     # Executing orders
-    def execute_orders(self, filePath):
+    def executeOrders(self, filePath):
         with open(filePath, 'r') as file_reader:
             for line in file_reader:
                 result = [line.strip() for x in line.split(',')] # splits the string where the comma is
                 if len(result) == 3:
-                    receive_shipment(result[0], result[1], result[2])
-                #else:
-                    send_shipment(result[0], result[1])
+                    self.receive_shipment(result[0], int(result[1]), result[2])
+                else:
+                    self.send_shipment(result[0], int(result[1]))
+
+
+                # add_summary_line
+
 
     def receive_shipment(self, name, amount, date):
         id = _Vaccines.order_count
         date_to_insert = datetime.strptime(date, "%Y-%m-%d").date()
+        supplier_id = _Suppliers.find_by_name(name)[0] # supplier id
+        vaccine = Vaccine(id,date_to_insert,supplier_id,amount)
+        _Vaccines.insert(vaccine)
 
+        current_amount_received = _Logistics.find(supplier_id).count_received
+        _Logistics.update_received(supplier_id, amount + current_amount_received)
+
+    def send_shipment(self, location, amount):
 
 
 # Create repository singleton
