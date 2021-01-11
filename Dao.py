@@ -1,8 +1,11 @@
 from Dto import *
 
 
+# must be singletons
+
 class _Vaccines:
     order_count = 0
+    total_inventory = 0
 
     def __init__(self, conn):
         self._conn = conn
@@ -13,11 +16,11 @@ class _Vaccines:
            """, [vaccine.id, vaccine.date, vaccine.supplier, vaccine.quantity])
         self.order_count += 1
 
-    def find(self, vaccine_id):
+    def find(self, id):
         c = self._conn.cursor()
         c.execute("""
             SELECT * FROM vaccines WHERE id = ?
-        """, [vaccine_id])
+        """, [id])
         return Vaccine(*c.fetchone())
 
 
@@ -46,6 +49,8 @@ class _Suppliers:
 
 
 class _Clinics:
+    total_demand = 0
+
     def __init__(self, conn):
         self._conn = conn
 
@@ -54,6 +59,7 @@ class _Clinics:
             INSERT INTO clinics (id, location, demand, logistic) VALUES (?, ?, ?, ?)
         """, [clinic.id, clinic.location, clinic.demand, clinic.logistic])
 
+    # probably change
     def find_all(self):
         c = self._conn.cursor()
         all = c.execute("""
@@ -63,6 +69,8 @@ class _Clinics:
 
 
 class _Logistics:
+    total_sent = 0
+    total_received = 0
 
     def __init__(self, conn):
         self._conn = conn
