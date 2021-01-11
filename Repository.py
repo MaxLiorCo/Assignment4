@@ -1,5 +1,6 @@
 import sqlite3
 import atexit
+from Dto import *
 
 # For Join query
 from datetime import datetime
@@ -8,7 +9,6 @@ from Dao import _Vaccines
 from Dao import _Suppliers
 from Dao import _Clinics
 from Dao import _Logistics
-from Dto import *
 
 
 # TODO: remove this shit
@@ -81,20 +81,16 @@ class _Repository:
             # read first line to know the lengths of the insertions for each table
             tableInsertionsLength = [int(num) for num in firstLine.split(',')]
             # NOTICE: last cell in each line is "*\n" but python ignores \n when converting to int
-            # insert from file to vaccines table
             for i in range(tableInsertionsLength[0]):
                 line = file_reader.readline().split(',')
                 self.vaccines.insert(
                     Vaccine(int(line[0]), datetime.strptime(line[1], "%Y-%m-%d").date(), int(line[2]), int(line[3])))
-            # insert from file to suppliers table
             for i in range(tableInsertionsLength[1]):
                 line = file_reader.readline().split(',')
                 self.suppliers.insert(Supplier(int(line[0]), line[1], int(line[2])))
-            # insert from file to clinics table
             for i in range(tableInsertionsLength[2]):
                 line = file_reader.readline().split(',')
                 self.clinics.insert(Clinic(int(line[0]), line[1], int(line[2]), int(line[3])))
-            # insert from file to logistics table
             for i in range(tableInsertionsLength[3]):
                 line = file_reader.readline().split(',')
                 self.logistics.insert(Logistic(int(line[0]), line[1], int(line[2]), int(line[3])))
@@ -113,4 +109,23 @@ class _Repository:
                 SELECT * FROM logistics
             """).fetchall())
 
-# ------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------
+    # Executing orders
+    def executeOrders(self, filePath):
+        with open(filePath, 'r') as file_reader:
+            for line in file_reader:
+                result = [line.strip() for x in line.split(',')] # splits the string where the comma is
+                if len(result) == 3:
+                    receive_shipment(result[0], result[1], result[2])
+                #else:
+                    send_shipment(result[0], result[1])
+
+def receive_shipment(self, name, amount, date):
+    id = _Vaccines.order_count
+    date_to_insert = datetime.strptime(date, "%Y-%m-%d").date()
+
+
+
+# Create repository singleton
+# repo = _Repository()
+# atexit.register(repo._close())
