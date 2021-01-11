@@ -1,4 +1,5 @@
 import atexit
+import os
 import sqlite3
 import sys
 from Repository import _Repository
@@ -6,6 +7,7 @@ from sqlite3 import Error
 
 conn = sqlite3.connect("./database.db")
 repo = _Repository()
+
 try:
     repo.create_tables()
 except Error as e:

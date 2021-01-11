@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import atexit
 from Dto import *
@@ -11,14 +12,6 @@ from Dao import _Clinics
 from Dao import _Logistics
 
 
-# TODO: remove this shit
-class StudentGradeWithName:
-    def __init__(self, name, assignment_num, grade):
-        self.name = name
-        self.assignment_num = assignment_num
-        self.grade = grade
-
-
 # The Repository
 class _Repository:
     def __init__(self):
@@ -27,6 +20,8 @@ class _Repository:
         self.suppliers = _Suppliers(self._conn)
         self.clinics = _Clinics(self._conn)
         self.logistics = _Logistics(self._conn)
+        if os.path.exists("output.txt"):
+            os.remove("output.txt")
 
     # TODO remove this shit
     def get_grades_with_names(self):
@@ -124,17 +119,16 @@ class _Repository:
 
     # ------------------------------------------------------------------------------------------------------------
     # Executing orders
-    def execute_orders(self, filePath):
-        with open(filePath, 'r') as file_reader:
+    def execute_orders(self, file_path):
+        with open(file_path, 'r') as file_reader:
             for line in file_reader:
-                result = [x.strip() for x in line.split(',')] # splits the string where the comma is
+                result = [x.strip() for x in line.split(',')]  # splits the string where the comma is
                 if len(result) == 3:
                     self.receive_shipment(result[0], int(result[1]), result[2])
                 else:
                     self.send_shipment(result[0], int(result[1]))
 
                 self.add_summary_line()
-
 
     def receive_shipment(self, name, amount, date):
         id = self.vaccines.order_count
@@ -151,4 +145,4 @@ class _Repository:
         self.clinics.update_demand(location, amount)  # update the demand in the clinic which is in the location
 
         logistic_id_to_update = self.clinics.get_logistics_by_location(location)
-        self.logistics.update_sent(logistic_id_to_update, amount)   # update the logistics that sent the vaccines
+        self.logistics.update_sent(logistic_id_to_update, amount)  # update the logistics that sent the vaccines

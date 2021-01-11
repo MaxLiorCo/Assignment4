@@ -4,7 +4,7 @@ from Dto import *
 # must be singletons
 
 class _Vaccines:
-    order_count = 0
+    order_count = 1
     total_inventory = 0
 
     def __init__(self, conn):
