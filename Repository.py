@@ -139,16 +139,16 @@ class _Repository:
     def receive_shipment(self, name, amount, date):
         id = _Vaccines.order_count
         date_to_insert = datetime.strptime(date, "%Y-%m-%d").date()
-        supplier_id = _Suppliers.find_by_name(name).id # supplier id
+        supplier_id = _Suppliers.find_by_name(name).id  # supplier id
         vaccine = Vaccine(id, date_to_insert, supplier_id, amount)
         _Vaccines.insert(vaccine)
 
         _Logistics.update_received(supplier_id, amount)
 
     def send_shipment(self, location, amount):
-        _Vaccines.take_from_inventory(amount) # take the amount needed from the inventory
+        _Vaccines.take_from_inventory(amount)  # take the amount needed from the inventory
 
-        _Clinics.update_demand(location, amount) # update the demand in the clinic which is in the location
+        _Clinics.update_demand(location, amount)  # update the demand in the clinic which is in the location
 
         logistic_id_to_update = _Clinics.get_logistics_by_location(location)
-        _Logistics.update_sent(logistic_id_to_update, amount) # update the logistics that sent the vaccines
+        _Logistics.update_sent(logistic_id_to_update, amount)   # update the logistics that sent the vaccines
