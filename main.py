@@ -15,13 +15,12 @@ except Error as e:
 repo.register_file(sys.argv[1])
 repo.execute_orders(sys.argv[2])
 
+
 # inside executeOrders we the create output file
-
-
 def close():
     conn.commit()
     conn.close()
 
 
 # register to close when program finishes
-atexit.register(close())
+atexit.register(close)

@@ -23,17 +23,6 @@ class _Repository:
         if os.path.exists("output.txt"):
             os.remove("output.txt")
 
-    # TODO remove this shit
-    def get_grades_with_names(self):
-        c = self._conn.cursor()
-        all = c.execute("""
-            SELECT students.name, grades.assignment_num, grades.grade 
-            FROM grades
-            JOIN students ON grades.student_id = students.id
-        """).fetchall()
-
-        return [StudentGradeWithName(*row) for row in all]
-
     def create_tables(self):
         self._conn.executescript("""
         CREATE TABLE vaccines (

@@ -35,7 +35,7 @@ class _Vaccines:
             quantity = shipment[1]
             if amount >= quantity:  # remove
                 amount -= quantity
-                self.total_inventory -= amount
+                self.total_inventory -= quantity
                 c.execute("""
                     DELETE FROM vaccines WHERE id = ?
                 """, [id])
