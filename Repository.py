@@ -109,7 +109,8 @@ class _Repository:
                 SELECT * FROM logistics
             """).fetchall())
 
-    # https://www.cs.bgu.ac.il/~dolavn/slides/Persistence.html
+
+    def add_summary_line(self, ):
     # ------------------------------------------------------------------------------------------------------------
     # Executing orders
     def execute_orders(self, filePath):
