@@ -80,7 +80,7 @@ class _Repository:
             firstLine = file_reader.readline()
             # read first line to know the lengths of the insertions for each table
             tableInsertionsLength = [int(num) for num in firstLine.split(',')]
-            # NOTICE: last cell in each line is "*\n" but python ignores \n when converting to int
+            # NOTICE: last cell in each line is "_\n" but python ignores \n when converting to int, would produce bugs otherwise
             for i in range(tableInsertionsLength[0]):
                 line = file_reader.readline().split(',')
                 self.vaccines.insert(
@@ -109,9 +109,10 @@ class _Repository:
                 SELECT * FROM logistics
             """).fetchall())
 
+    # https://www.cs.bgu.ac.il/~dolavn/slides/Persistence.html
     # ------------------------------------------------------------------------------------------------------------
     # Executing orders
-    def executeOrders(self, filePath):
+    def execute_orders(self, filePath):
         with open(filePath, 'r') as file_reader:
             for line in file_reader:
                 result = [line.strip() for x in line.split(',')] # splits the string where the comma is
@@ -120,9 +121,9 @@ class _Repository:
                 #else:
                     send_shipment(result[0], result[1])
 
-def receive_shipment(self, name, amount, date):
-    id = _Vaccines.order_count
-    date_to_insert = datetime.strptime(date, "%Y-%m-%d").date()
+    def receive_shipment(self, name, amount, date):
+        id = _Vaccines.order_count
+        date_to_insert = datetime.strptime(date, "%Y-%m-%d").date()
 
 
 
