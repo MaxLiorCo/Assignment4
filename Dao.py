@@ -30,11 +30,18 @@ class _Suppliers:
                 INSERT INTO suppliers (id, name, logistic) VALUES (?, ?, ?)
         """, [supplier.id, supplier.name, supplier.logistic])
 
-    def find(self, column_name, column_value): # column_name = id or name
+    def find_by_id(self, id):
         c = self._conn.cursor()
         c.execute("""
-                SELECT * FROM suppliers WHERE ? = ?
-            """, [column_name, column_value])
+                SELECT * FROM suppliers WHERE id = ?
+            """, [id])
+        return Supplier(*c.fetchone())
+
+    def find_by_name(self, name):
+        c = self._conn.cursor()
+        c.execute("""
+                SELECT * FROM suppliers WHERE name = ?
+            """, [name])
         return Supplier(*c.fetchone())
 
 
