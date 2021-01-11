@@ -126,7 +126,6 @@ class _Repository:
                            str(self.logistics.total_received) + "," +
                            str(self.logistics.total_sent))
 
-    def add_summary_line(self, ):
     # ------------------------------------------------------------------------------------------------------------
     # Executing orders
     def executeOrders(self, filePath):
