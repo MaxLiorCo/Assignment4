@@ -44,7 +44,7 @@ class _Vaccines:
                                 UPDATE vaccines SET quantity = ? WHERE id = ?
                                 """, [quantity, id])
                 if amount == 0:
-                    break;
+                    break
 
 
 class _Suppliers:
@@ -81,6 +81,7 @@ class _Clinics:
         self._conn.execute("""
             INSERT INTO clinics (id, location, demand, logistic) VALUES (?, ?, ?, ?)
         """, [clinic.id, clinic.location, clinic.demand, clinic.logistic])
+        self.total_demand += clinic.demand
 
     # probably change
     def get_logistics_by_location(self, location):
@@ -97,7 +98,7 @@ class _Clinics:
         curr_demand = c.fetchone()
         c.execute("""
             UPDATE clinics SET demand = ? where location = ?""", [amount + curr_demand, location])
-
+        self.total_demand -= amount
 
 
 class _Logistics:
@@ -126,6 +127,7 @@ class _Logistics:
         current_amount = c.fetchone()
         self._conn.execute("""
                 UPDATE logistics SET count_received = ? WHERE id = ?""", [amount_to_add + current_amount, supplier_id])
+        self.total_received += amount_to_add
 
     def update_sent(self, supplier_id, amount_to_add):
         c = self._conn.cursor()
@@ -134,3 +136,4 @@ class _Logistics:
         current_amount = c.fetchone()
         self._conn.execute("""
             UPDATE logistics SET count_received = ? WHERE id = ?""", [amount_to_add + current_amount, supplier_id])
+        self.total_sent += amount_to_add
