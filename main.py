@@ -9,8 +9,11 @@ conn = None
 
 conn = sqlite3.connect("./database.db")
 repo = _Repository()
-repo.create_tables()
-repo.registerFile(sys.argv[0])
-repo.executeOrders(sys.argv[1])
+try:
+    repo.create_tables()
+except Error as e:
+    print("table already exists")
+repo.registerFile(sys.argv[1])
+repo.executeOrders(sys.argv[2])
 # inside executeOrders we create output file
 

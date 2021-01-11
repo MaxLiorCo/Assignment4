@@ -1,4 +1,4 @@
-class Vaccines:
+class Vaccine:
     def __init__(self, id, date, supplier, quantity):
         self.id = id
         self.date = date
@@ -6,22 +6,22 @@ class Vaccines:
         self.quantity = quantity
 
 
-class Suppliers:
+class Supplier:
     def __init__(self, id, name, logistic):
         self.id = id
         self.name = name
         self.logistic = logistic
 
 
-class Clinics:
-    def __init__(self, id, location, name, logistic):
+class Clinic:
+    def __init__(self, id, location, demand, logistic):
         self.id = id
         self.location = location
-        self.name = name
+        self.demand = demand
         self.logistic = logistic
 
 
-class Logistics:
+class Logistic:
     def __init__(self, id, name, count_sent, count_received):
         self.id = id
         self.name = name

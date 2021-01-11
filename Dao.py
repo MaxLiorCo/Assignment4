@@ -8,14 +8,14 @@ class _Vaccines:
     def insert(self, vaccine):
         self._conn.execute("""
                INSERT INTO vaccines (id, date, supplier, quantity) VALUES (?, ?, ?, ?)
-           """, [vaccine.id, vaccine.data, vaccine.supplier, vaccine.quantity])
+           """, [vaccine.id, vaccine.date, vaccine.supplier, vaccine.quantity])
 
     def find(self, vaccine_id):
         c = self._conn.cursor()
         c.execute("""
             SELECT * FROM vaccines WHERE id = ?
         """, [vaccine_id])
-        return Vaccines(*c.fetchone())
+        return Vaccine(*c.fetchone())
 
 
 class _Suppliers:
@@ -24,7 +24,7 @@ class _Suppliers:
 
     def insert(self, supplier):
         self._conn.execute("""
-                INSERT INTO suppliers (id, name, logistic) VALUES (?, ?)
+                INSERT INTO suppliers (id, name, logistic) VALUES (?, ?, ?)
         """, [supplier.id, supplier.name, supplier.logistic])
 
     def find(self, id):
@@ -32,7 +32,7 @@ class _Suppliers:
         c.execute("""
                 SELECT * FROM suppliers WHERE id = ?
             """, [id])
-        return Suppliers(*c.fetchone())
+        return Supplier(*c.fetchone())
 
 
 class _Clinics:
@@ -41,7 +41,7 @@ class _Clinics:
 
     def insert(self, clinic):
         self._conn.execute("""
-            INSERT INTO clinics (id, location, demand, logistic) VALUES (?, ?, ?)
+            INSERT INTO clinics (id, location, demand, logistic) VALUES (?, ?, ?, ?)
         """, [clinic.id, clinic.location, clinic.demand, clinic.logistic])
 
     def find_all(self):
@@ -49,7 +49,7 @@ class _Clinics:
         all = c.execute("""
             SELECT * FROM clinics
         """).fetchall()
-        return [Clinics(*row) for row in all]
+        return [Clinic(*row) for row in all]
 
 
 class _Logistics:
@@ -67,4 +67,4 @@ class _Logistics:
         c.execute("""
             SELECT * FROM logistics WHERE id = ?
         """, [logistic_id])
-        return Logistics(*c.fetchone())
+        return Logistic(*c.fetchone())

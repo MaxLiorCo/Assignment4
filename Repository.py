@@ -7,8 +7,8 @@ from datetime import datetime
 from Dao import _Vaccines
 from Dao import _Suppliers
 from Dao import _Clinics
-
 from Dao import _Logistics
+from Dto import *
 
 
 # TODO: remove this shit
@@ -80,25 +80,42 @@ class _Repository:
         );
     """)
 
-    def registerFile(filePath):
-        file_reader = open(filePath, 'r')
-        firstLine = file_reader.readline()
-        # read first line to know the lengths of the insertions for each table
-        tableInsertionsLength = [int(num) for num in firstLine.split(',')]
-        #Lines = file_reader.readlines();
-        for i in range(tableInsertionsLength[0]):
-            line = file_reader.readline().split(',')
-            vaccines.insert(int(line[0]),datetime.strptime)
+    def registerFile(self, filePath):
+        with open(filePath, 'r') as file_reader:
+            firstLine = file_reader.readline()
+            # read first line to know the lengths of the insertions for each table
+            tableInsertionsLength = [int(num) for num in firstLine.split(',')]
+            # NOTICE: last cell in each line is "*\n" but python ignores \n when converting to int
+            for i in range(tableInsertionsLength[0]):
+                line = file_reader.readline().split(',')
+                self.vaccines.insert(
+                    Vaccine(int(line[0]), datetime.strptime(line[1], "%Y-%m-%d").date(), int(line[2]), int(line[3])))
+            for i in range(tableInsertionsLength[1]):
+                line = file_reader.readline().split(',')
+                self.suppliers.insert(Supplier(int(line[0]), line[1], int(line[2])))
+            for i in range(tableInsertionsLength[2]):
+                line = file_reader.readline().split(',')
+                self.clinics.insert(Clinic(int(line[0]), line[1], int(line[2]), int(line[3])))
+            for i in range(tableInsertionsLength[3]):
+                line = file_reader.readline().split(',')
+                self.logistics.insert(Logistic(int(line[0]), line[1], int(line[2]), int(line[3])))
 
-
-
-
-
-
-
+            curser = self._conn.cursor()
+            print(curser.execute(""" 
+                SELECT * FROM vaccines
+            """).fetchall())
+            print(curser.execute(""" 
+                SELECT * FROM suppliers
+            """).fetchall())
+            print(curser.execute(""" 
+                SELECT * FROM clinics
+            """).fetchall())
+            print(curser.execute(""" 
+                SELECT * FROM logistics
+            """).fetchall())
 
 # ------------------------------------------------------------------------------------------------------------
 
 # Create repository singleton
-repo = _Repository()
-atexit.register(repo._close())
+# repo = _Repository()
+# atexit.register(repo._close())
