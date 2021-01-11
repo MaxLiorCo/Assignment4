@@ -1,5 +1,6 @@
 import sqlite3
 import atexit
+from Dto import *
 
 # For Join query
 from datetime import datetime
@@ -8,7 +9,6 @@ from Dao import _Vaccines
 from Dao import _Suppliers
 from Dao import _Clinics
 from Dao import _Logistics
-from Dto import *
 
 
 # TODO: remove this shit
@@ -114,8 +114,23 @@ class _Repository:
                 SELECT * FROM logistics
             """).fetchall())
 
-# ------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------
+    # Executing orders
+    def executeOrders(self, filePath):
+        with open(filePath, 'r') as file_reader:
+            for line in file_reader:
+                result = [line.strip() for x in line.split(',')] # splits the string where the comma is
+                if len(result) == 3:
+                    receive_shipment(result[0], result[1], result[2])
+                #else:
+                    send_shipment(result[0], result[1])
+
+def receive_shipment(self, name, amount, date):
+    id = _Vaccines.order_count
+    date_to_insert = datetime.strptime(date, "%Y-%m-%d").date()
+
+
 
 # Create repository singleton
-# repo = _Repository()
-# atexit.register(repo._close())
+repo = _Repository()
+atexit.register(repo._close())

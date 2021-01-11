@@ -14,6 +14,6 @@ try:
 except Error as e:
     print("table already exists")
 repo.registerFile(sys.argv[1])
-repo.executeOrders(sys.argv[2])
+#repo.executeOrders(sys.argv[2])
 # inside executeOrders we create output file
 

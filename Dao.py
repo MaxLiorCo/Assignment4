@@ -2,6 +2,8 @@ from Dto import *
 
 
 class _Vaccines:
+    order_count = 0
+
     def __init__(self, conn):
         self._conn = conn
 
@@ -9,6 +11,7 @@ class _Vaccines:
         self._conn.execute("""
                INSERT INTO vaccines (id, date, supplier, quantity) VALUES (?, ?, ?, ?)
            """, [vaccine.id, vaccine.date, vaccine.supplier, vaccine.quantity])
+        self.order_count += 1
 
     def find(self, vaccine_id):
         c = self._conn.cursor()
