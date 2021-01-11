@@ -85,6 +85,7 @@ class _Repository:
             # vaccines
             for i in range(tableInsertionsLength[0]):
                 line = file_reader.readline().split(',')
+                self.vaccines.total_inventory += int(line[3])  # adds given quantity
                 self.vaccines.insert(
                     Vaccine(int(line[0]), datetime.strptime(line[1], "%Y-%m-%d").date(), int(line[2]), int(line[3])))
             # suppliers
@@ -94,10 +95,13 @@ class _Repository:
             # clinics
             for i in range(tableInsertionsLength[2]):
                 line = file_reader.readline().split(',')
+                self.clinics.total_demand += int(line[2])  # adds given demand
                 self.clinics.insert(Clinic(int(line[0]), line[1], int(line[2]), int(line[3])))
             # logistics
             for i in range(tableInsertionsLength[3]):
                 line = file_reader.readline().split(',')
+                self.logistics.total_received += int(line[3])
+                self.logistics.total_sent += int(line[2])
                 self.logistics.insert(Logistic(int(line[0]), line[1], int(line[2]), int(line[3])))
 
             # TODO remove this before submission
@@ -137,18 +141,18 @@ class _Repository:
 
 
     def receive_shipment(self, name, amount, date):
-        id = self.vaccines.order_count
+        id = _Vaccines.order_count
         date_to_insert = datetime.strptime(date, "%Y-%m-%d").date()
-        supplier_id = self.suppliers.find_by_name(name).id  # supplier id
+        supplier_id = _Suppliers.find_by_name(name).id # supplier id
         vaccine = Vaccine(id, date_to_insert, supplier_id, amount)
-        self.vaccines.insert(vaccine)
+        _Vaccines.insert(vaccine)
 
-        self.logistics.update_received(supplier_id, amount)
+        _Logistics.update_received(supplier_id, amount)
 
     def send_shipment(self, location, amount):
-        self.vaccines.take_from_inventory(amount)  # take the amount needed from the inventory
+        _Vaccines.take_from_inventory(amount) # take the amount needed from the inventory
 
-        self.clinics.update_demand(location, amount)  # update the demand in the clinic which is in the location
+        _Clinics.update_demand(location, amount) # update the demand in the clinic which is in the location
 
         logistic_id_to_update = _Clinics.get_logistics_by_location(location)
-        self.logistics.update_sent(logistic_id_to_update, amount)   # update the logistics that sent the vaccines
+        _Logistics.update_sent(logistic_id_to_update, amount) # update the logistics that sent the vaccines

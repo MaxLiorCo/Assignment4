@@ -123,20 +123,20 @@ class _Logistics:
         """, [logistic_id])
         return Logistic(*c.fetchone())
 
-    def update_received(self, supplier_id, amount_to_add):
+    def update_received(self, logistic_id, amount_to_add):
         c = self._conn.cursor()
         c.execute("""
-            SELECT count_received FROM logistics WHERE id = ?""", [supplier_id])
-        current_amount = c.fetchone()
+            SELECT count_received FROM logistics WHERE id = ?""", [logistic_id])
+        current_amount = c.fetchone()[0]
         self._conn.execute("""
-                UPDATE logistics SET count_received = ? WHERE id = ?""", [amount_to_add + current_amount, supplier_id])
+                UPDATE logistics SET count_received = ? WHERE id = ?""", [amount_to_add + current_amount, logistic_id])
         self.total_received += amount_to_add
 
     def update_sent(self, supplier_id, amount_to_add):
         c = self._conn.cursor()
         c.execute("""
                     SELECT count_sent FROM logistics WHERE id = ?""", [supplier_id])
-        current_amount = c.fetchone()
+        current_amount = c.fetchone()[0]
         self._conn.execute("""
             UPDATE logistics SET count_received = ? WHERE id = ?""", [amount_to_add + current_amount, supplier_id])
         self.total_sent += amount_to_add
