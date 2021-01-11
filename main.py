@@ -9,17 +9,16 @@ repo = _Repository()
 try:
     repo.create_tables()
 except Error as e:
-    print()
+    pass
 repo.register_file(sys.argv[1])
 repo.execute_orders(sys.argv[2])
 
+# inside executeOrders we the create output file
 
-# inside executeOrders we create output file
 
-# take care of it
-def close(self):
-    self._conn.commit()
-    self._conn.close()
+def close():
+    conn.commit()
+    conn.close()
 
 
 # register to close when program finishes

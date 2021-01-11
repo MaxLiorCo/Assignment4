@@ -128,17 +128,16 @@ class _Repository:
 
     # ------------------------------------------------------------------------------------------------------------
     # Executing orders
-    def executeOrders(self, filePath):
+    def execute_orders(self, filePath):
         with open(filePath, 'r') as file_reader:
             for line in file_reader:
-                result = [line.strip() for x in line.split(',')] # splits the string where the comma is
+                result = [x.strip() for x in line.split(',')] # splits the string where the comma is
                 if len(result) == 3:
                     self.receive_shipment(result[0], int(result[1]), result[2])
                 else:
                     self.send_shipment(result[0], int(result[1]))
 
-
-                # add_summary_line
+                self.add_summary_line()
 
 
     def receive_shipment(self, name, amount, date):

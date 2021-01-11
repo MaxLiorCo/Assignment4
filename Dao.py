@@ -23,6 +23,29 @@ class _Vaccines:
         """, [id])
         return Vaccine(*c.fetchone())
 
+    # removes or updates existing entries
+    def take_from_inventory(self, amount):
+        c = self._conn.cursor()
+        list_of_records = c.execute("""
+                    SELECT id, quantity FROM vaccines ORDER BY DATE
+                """, [id]).fetchall()
+        for shipment in list_of_records:
+            id = shipment[0]
+            quantity = shipment[1]
+            if amount >= quantity:  # remove
+                amount -= quantity
+                c.execute("""
+                    DELETE FROM vaccines WHERE id = ?
+                """, [id])
+            else:
+                quantity -= amount  # we still have more remaining from that shipment
+                amount = 0
+                self._conn.execute("""
+                                UPDATE vaccines SET quantity = ? WHERE id = ?
+                                """, [quantity, id])
+                if amount == 0:
+                    break;
+
 
 class _Suppliers:
     def __init__(self, conn):
