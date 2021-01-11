@@ -11,6 +11,7 @@ class _Vaccines:
         self._conn = conn
 
     def insert(self, vaccine):
+        self.total_inventory += vaccine.quantity
         self._conn.execute("""
                INSERT INTO vaccines (id, date, supplier, quantity) VALUES (?, ?, ?, ?)
            """, [vaccine.id, vaccine.date, vaccine.supplier, vaccine.quantity])
@@ -34,17 +35,19 @@ class _Vaccines:
             quantity = shipment[1]
             if amount >= quantity:  # remove
                 amount -= quantity
+                self.total_inventory -= amount
                 c.execute("""
                     DELETE FROM vaccines WHERE id = ?
                 """, [id])
             else:
                 quantity -= amount  # we still have more remaining from that shipment
+                self.total_inventory -= amount
                 amount = 0
                 self._conn.execute("""
                                 UPDATE vaccines SET quantity = ? WHERE id = ?
                                 """, [quantity, id])
                 if amount == 0:
-                    break;
+                    break
 
 
 class _Suppliers:

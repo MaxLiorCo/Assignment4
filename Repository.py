@@ -85,7 +85,6 @@ class _Repository:
             # vaccines
             for i in range(tableInsertionsLength[0]):
                 line = file_reader.readline().split(',')
-                self.vaccines.total_inventory += int(line[3])  # adds given quantity
                 self.vaccines.insert(
                     Vaccine(int(line[0]), datetime.strptime(line[1], "%Y-%m-%d").date(), int(line[2]), int(line[3])))
             # suppliers
@@ -95,13 +94,10 @@ class _Repository:
             # clinics
             for i in range(tableInsertionsLength[2]):
                 line = file_reader.readline().split(',')
-                self.clinics.total_demand += int(line[2])  # adds given demand
                 self.clinics.insert(Clinic(int(line[0]), line[1], int(line[2]), int(line[3])))
             # logistics
             for i in range(tableInsertionsLength[3]):
                 line = file_reader.readline().split(',')
-                self.logistics.total_received += int(line[3])
-                self.logistics.total_sent += int(line[2])
                 self.logistics.insert(Logistic(int(line[0]), line[1], int(line[2]), int(line[3])))
 
             # TODO remove this before submission
