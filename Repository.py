@@ -63,6 +63,7 @@ class _Repository:
         );
     """)
 
+    # register file entries to database
     def register_file(self, filePath):
         with open(filePath, 'r') as file_reader:
             firstLine = file_reader.readline()
@@ -75,6 +76,8 @@ class _Repository:
                 line = file_reader.readline().split(',')
                 self.vaccines.insert(
                     Vaccine(int(line[0]), datetime.strptime(line[1], "%Y-%m-%d").date(), int(line[2]), int(line[3])))
+                if( i == tableInsertionsLength[0] - 1 ):
+                    self.vaccines.order_count = int(line[0]) + 1  # for the case we received a list of id's not beginning from 1
             # suppliers
             for i in range(tableInsertionsLength[1]):
                 line = file_reader.readline().split(',')
@@ -88,15 +91,7 @@ class _Repository:
                 line = file_reader.readline().split(',')
                 self.logistics.insert(Logistic(int(line[0]), line[1], int(line[2]), int(line[3])))
 
-    def add_summary_line(self):
-        with open('./output.txt', 'a') as the_file:
-            the_file.write(str(self.vaccines.total_inventory) + "," +
-                           str(self.clinics.total_demand) + "," +
-                           str(self.logistics.total_received) + "," +
-                           str(self.logistics.total_sent) + "\n")
-
-    # ------------------------------------------------------------------------------------------------------------
-    # Executing orders
+    # Executing orders from file
     def execute_orders(self, file_path):
         with open(file_path, 'r') as file_reader:
             for line in file_reader:
@@ -124,6 +119,14 @@ class _Repository:
 
         logistic_id_to_update = self.clinics.get_logistics_by_location(location)
         self.logistics.update_sent(logistic_id_to_update, amount)  # update the logistics that sent the vaccines
+
+    def add_summary_line(self):
+        with open('./output.txt', 'a') as the_file:
+            the_file.write(str(self.vaccines.total_inventory) + "," +
+                           str(self.clinics.total_demand) + "," +
+                           str(self.logistics.total_received) + "," +
+                           str(self.logistics.total_sent) + "\n")
+
 
 repo = _Repository()
 atexit.register(repo._close)

@@ -28,4 +28,3 @@ class Logistic:
         self.count_sent = count_sent
         self.count_received = count_received
 
-
